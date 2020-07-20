@@ -39,7 +39,7 @@ let budgetController = (function () {
         addItem: function (type, des, val) {
             let newItem, ID
             // Creat new ID
-            if (data.allItems[type.length > 0]) {
+            if (data.allItems[type].length > 0) {
                 ID = data.allItems[type][data.allItems[type].length - 1].id + 1
             } else {
                 ID = 0
@@ -55,6 +55,21 @@ let budgetController = (function () {
             data.allItems[type].push(newItem)
             // Return the new element
             return newItem
+        },
+
+        deleteItem: function (type, id) {
+            let ids, index
+
+            ids = data.allItems[type].map(function (current) {
+                return current.id
+            })
+
+            index = ids.indexOf(id)
+
+            if (index !== -1) {
+                data.allItems[type].splice(index, 1)
+            }
+
         },
 
         calculateBudget: function () {
@@ -232,10 +247,11 @@ let controller = (function (budgetCtrl, UICtrl) {
             //INC 1 exemple
             splitID = itemID.split('-')
             type = splitID[0]
-            ID = splitID[1]
+                // The ID must be a NUMBER and not a STRING, it will be easyer to find it and delete it.
+            ID = parseInt(splitID[1])
 
             // 1. Delete tthe item from the data structure
-
+            budgetCtrl.deleteItem(type, ID)
             // 2. Delete the item from the UI
 
             // 3. Update and show the new result
